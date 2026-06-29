@@ -26,7 +26,8 @@ class Tree{
         
     
 }
-    buildTree(array)   {
+    buildTree(array) {
+    //function to create a binary search tree 
         array = this.checkArray(array)
         if (array.length === 0) return null
         const mid = Math.floor(array.length/2)
@@ -91,26 +92,49 @@ class Tree{
             }
         }
     }
-
-    deleteItem(value){
-        //delete a value from the tree 
-        if (!this.includes(value)) return false
-        if (this.root === value ){
-            if((this.root.right === null )&& (this.root.right === null)){
-                this.root = null
-                return true 
-
-            }
-            else if (this.root.right === null && this.root.left !== null){
-                this.root = this.root.left
-                this.root.left = null
-            }
-            else if (this.root.left === null && this.root.right !== null){
-                this.root = this.root.right;
-                this.root.right = null;
-            }
+    deleteItem (value){
+        if (!this.checkValue(value)) return false;
+        if (!this.includes(value)) return false;
+        this.root = this.deleteNode(this.root, value)
+        return true
 
     }
-    else(){}
+
+    deleteNode(node, value){
+        //first consideration when node is null
+        if (node === null) return null;
+        if (value < node.node){
+            node.left = this.deleteNode(node.left, value);
+            return node
+        }
+        
+        if (value > node.node){
+            node.right = this.deleteNode(node.right, value)
+            return node;
+        }
+
+        if (node.left === null && node.right === null) {
+            return null
+        }
+        //one child case considered here 
+        if (node.left === null) return node.right;
+        if (node.right === null) return node.left;
+        //two children considered and a replacement for current node 
+        const successor = this.minValueNode(node.right)
+        node.node = successor.node
+        //delete the successor from the right 
+        node.right = this.deleteNode(node.right, successor.node);
+        return node
+    }
+
+    minValueNode(node){
+        let current = node;
+        while (current.left !== null){
+            current = current.left;
+
+        }
+        return current;
+    }
+    
   
-}}
+}
