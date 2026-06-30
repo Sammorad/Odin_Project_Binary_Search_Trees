@@ -290,3 +290,21 @@ rebalance() {
 }
   
 }
+
+function arrayOfRandom(size= 15, max = 100){
+    //creating 15 random numbers in an array, each less than 100
+    const arr = []
+    for (let i=0; i< size; i +=1){
+        arr.push(Math.floor(Math.random()*max))
+    }
+    return arr;
+
+}
+
+const numbers = arrayOfRandom(15, 100);
+const tree = new Tree();
+tree.root = tree.buildTree(numbers)
+
+
+console.log("Random input", numbers);
+console.log("Root value:", tree.root? tree.root.node:null)
