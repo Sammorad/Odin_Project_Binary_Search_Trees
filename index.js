@@ -199,7 +199,94 @@ class Tree{
         this._postOrder(node.right, callback)
         callback(node);
     }
-    
-    
+
+
+_findNode(node, value) {
+    //find node with specific value 
+    if (node === null) return null;
+    if (node.node === value) return node;
+    if (node.node > value){
+        return this._findNode(node.left, value)
+    }else{
+        return this._findNode(node.right, value)
+    }
+}
+
+_heightFromNode(node){
+    //calculate height 
+    if (node === null) return 0;
+
+    const leftHeight = this._heightFromNode(node.left);
+    const rightHeight = this._heightFromNode(node.right);
+    return Math.max(leftHeight, rightHeight) + 1;
+}
+
+height(value){
+    //calculate the height of a node with specific value//
+    if (!this.checkValue(value))return null;
+    const targetNode = this._findNode(this.root, value);
+    if (targetNode === null) return null//where value is not in the tree 
+
+    return this._heightFromNode(targetNode);
+
+}
+
+depth(value) {
+  // Return null for invalid input
+  if (!this.checkValue(value)) return null;
+
+  let current = this.root;
+  let depth = 0;
+
+  while (current !== null) {
+    if (current.node === value) return depth;
+
+    if (value < current.node) {
+      current = current.left;
+    } else {
+      current = current.right;
+    }
+
+    depth += 1;
+  }
+
+  // Value not found in the tree
+  return null;
+}
+
+
+
+_checkBalance(node) {
+  // Empty subtree is balanced and has height 0 (node-based style)
+  if (node === null) return 0;
+
+  const leftHeight = this._checkBalance(node.left);
+  if (leftHeight === -1) return -1;
+
+  const rightHeight = this._checkBalance(node.right);
+  if (rightHeight === -1) return -1;
+
+  // If height difference is more than 1, subtree is unbalanced
+  if (Math.abs(leftHeight - rightHeight) > 1) return -1;
+
+  return Math.max(leftHeight, rightHeight) + 1;
+}
+
+isBalanced() {
+  return this._checkBalance(this.root) !== -1;
+}
+
+rebalance() {
+    //rebalance an unbalanced tree 
+  if (this.root === null) return null;
+  if (this.isBalanced()) return this.root;
+
+  const values = [];
+  this.inOrderForEach((node) => values.push(node.node));
+
+  // buildTree returns a new balanced root from the sorted values
+  this.root = this.buildTree(values);
+  return this.root;
+}
   
 }
